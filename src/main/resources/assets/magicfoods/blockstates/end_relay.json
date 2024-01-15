@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "magicfoods:block/end_relay"
+    }
+  }
+}

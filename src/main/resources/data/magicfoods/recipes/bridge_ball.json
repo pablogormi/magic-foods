@@ -1,0 +1,19 @@
+{
+  "type" : "minecraft:crafting_shaped",
+  "key" : {
+    "S" : {
+      "item" : "minecraft:snowball"
+    },
+    "B" : {
+      "tag" : "minecraft:boats"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "SBS",
+    "SSS"
+  ],
+  "result" : {
+    "item" : "magicfoods:bridge_ball"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "magicfoods:block/shelf",
+      "y" : 90
+    },
+    "facing=north": {
+      "model": "magicfoods:block/shelf"
+    },
+    "facing=south": {
+      "model": "magicfoods:block/shelf",
+      "y" : 180
+    },
+    "facing=west": {
+      "model": "magicfoods:block/shelf",
+      "y" : 270
+    }
+  }
+}

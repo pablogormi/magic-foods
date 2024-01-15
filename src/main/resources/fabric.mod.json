@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "magicfoods",
+  "version": "${version}",
+  "name": "Magic Food",
+  "description": "Magic Foods for you!",
+  "authors": [
+    "Hector",
+    "Jokin",
+    "Kiko"
+  ],
+  "contact": {
+    "website": "pablogormi.com"
+  },
+  "license": "MIT",
+  "icon": "assets/magic-food/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.pablogormi.magicfoods.MagicFoods"
+    ],
+    "client": [
+      "com.pablogormi.magicfoods.client.MagicFoodsClient"
+    ]
+  },
+  "mixins": [
+    "magic-food.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.8",
+    "fabric": "*",
+    "minecraft": "1.19"
+  }
+}

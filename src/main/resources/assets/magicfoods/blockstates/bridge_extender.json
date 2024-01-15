@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "magicfoods:block/bridge_extender"
+    },
+    "facing=north": {
+      "model": "magicfoods:block/bridge_extender"
+    },
+    "facing=south": {
+      "model": "magicfoods:block/bridge_extender"
+    },
+    "facing=west": {
+      "model": "magicfoods:block/bridge_extender"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "item.magicfoods.bridge_ball" : "Bridge Ball",
+  "item.magicfoods.magic_beef" : "Magic Beef",
+  "block.magicfoods.bridge_extender" : "Bridge Extender",
+  "item.magicfoods.bridge_extender" : "Bridge Extender",
+  "block.magicfoods.end_relay" : "End Relay",
+  "item.magicfoods.end_relay" : "End Relay",
+  "effect.magicfoods.flying" : "Flying"
+}
