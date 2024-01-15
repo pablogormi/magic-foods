@@ -1,7 +1,7 @@
 package com.pablogormi.magicfoods.block;
 
+import com.mojang.serialization.MapCodec;
 import com.pablogormi.magicfoods.block.entity.EndRelayBlockEntity;
-import com.pablogormi.magicfoods.block.entity.ModBlockEntities;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -9,28 +9,28 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.event.listener.GameEventListener;
-import org.checkerframework.checker.units.qual.C;
-import org.jetbrains.annotations.Nullable;
 
 public class EndRelayBlock extends BlockWithEntity {
-
+    public static final MapCodec<EndRelayBlock> CODEC = EndRelayBlock.createCodec(EndRelayBlock::new);
 
 
     public EndRelayBlock(Settings settings) {
         super(settings);
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
     }
 
     @Override
@@ -68,5 +68,10 @@ public class EndRelayBlock extends BlockWithEntity {
             server.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack));
         }
 
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 }

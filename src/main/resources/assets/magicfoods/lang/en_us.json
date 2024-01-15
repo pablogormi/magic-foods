@@ -5,5 +5,6 @@
   "item.magicfoods.bridge_extender" : "Bridge Extender",
   "block.magicfoods.end_relay" : "End Relay",
   "item.magicfoods.end_relay" : "End Relay",
-  "effect.magicfoods.flying" : "Flying"
+  "effect.magicfoods.flying" : "Flying",
+  "magicfoods.gui.item_group": "Magic Foods"
 }

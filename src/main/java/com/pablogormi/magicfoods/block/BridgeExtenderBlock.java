@@ -1,5 +1,6 @@
 package com.pablogormi.magicfoods.block;
 
+import com.mojang.serialization.MapCodec;
 import com.pablogormi.magicfoods.entity.BridgeBallEntity;
 import com.pablogormi.magicfoods.util.BridgeUtil;
 import net.minecraft.block.*;
@@ -13,9 +14,16 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class BridgeExtenderBlock extends HorizontalFacingBlock {
+    public static final MapCodec<BridgeExtenderBlock> CODEC = BridgeExtenderBlock.createCodec(BridgeExtenderBlock::new);
+
     public BridgeExtenderBlock(Settings settings) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODEC;
     }
 
     @Override
@@ -26,7 +34,7 @@ public class BridgeExtenderBlock extends HorizontalFacingBlock {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
 
     @Override

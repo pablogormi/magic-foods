@@ -12,27 +12,23 @@ public class FlyingStatusEffect extends StatusEffect {
     }
 
     @Override
-    public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
+    public void onApplied(LivingEntity entity, int amplifier) {
         if (entity instanceof PlayerEntity pe) {
             pe.getAbilities().allowFlying = true;
             pe.getAbilities().flying=true;
 
             pe.sendAbilitiesUpdate();
         }
-        super.onApplied(entity, attributes, amplifier);
+        super.onApplied(entity, amplifier);
     }
 
-
-
     @Override
-    public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        if (entity instanceof PlayerEntity pe) {
-            if (amplifier == 0) {
-                pe.getAbilities().allowFlying = false;
-                pe.getAbilities().flying = false;
-                pe.sendAbilitiesUpdate();
-            }
+    public void applyUpdateEffect(LivingEntity entity, int amplifier) { //TODO: no funciona
+        if(amplifier == 0 && entity instanceof PlayerEntity pe) {
+            pe.getAbilities().allowFlying = false;
+            pe.getAbilities().flying = false;
+            pe.sendAbilitiesUpdate();
         }
-        super.onRemoved(entity, attributes, amplifier);
+        super.applyUpdateEffect(entity, amplifier);
     }
 }

@@ -5,13 +5,16 @@ import com.pablogormi.magicfoods.block.entity.ShelfBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.AffineTransformations;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.Vec3d;
 
 public class ShelfBlockEntityRenderer implements BlockEntityRenderer<ShelfBlockEntity> {
 
@@ -33,22 +36,24 @@ public class ShelfBlockEntityRenderer implements BlockEntityRenderer<ShelfBlockE
 
             switch(facing) { //TODO esto va mal mal
                 case NORTH: {
-                    matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(0));
+                    matrices.multiplyPositionMatrix(AffineTransformations.DIRECTION_ROTATIONS.get(Direction.NORTH).getMatrix());
                 }
                 case EAST: {
-                    matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(90));
+                    matrices.multiplyPositionMatrix(AffineTransformations.DIRECTION_ROTATIONS.get(Direction.EAST).getMatrix());
                 }
                 case SOUTH: {
                     //matrices.translate(1.0/3.0, 0, 2.0/3.0);
-                    matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(0));
+                    matrices.multiplyPositionMatrix(AffineTransformations.DIRECTION_ROTATIONS.get(Direction.SOUTH).getMatrix());
                 }
                 case WEST: {
-                    matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(90));
+                    matrices.multiplyPositionMatrix(AffineTransformations.DIRECTION_ROTATIONS.get(Direction.WEST).getMatrix());
                 }
             }
+            int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), entity.getPos().up());
             MinecraftClient.getInstance()
                     .getItemRenderer()
-                    .renderItem(stack, ModelTransformation.Mode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, 0);
+                    .renderItem(stack, ModelTransformationMode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.getWorld(), 0);
+                    //.renderItem(stack, ModelTransformation.Mode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, 0);
             if (i == 1) {
                 //matrices.translate(1.0/3.0, 0, 0);
                 //matrices.translate(0, 0.5, 0);
