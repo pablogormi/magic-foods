@@ -54,7 +54,7 @@ public class MagicFoods implements ModInitializer {
     public static final Block SHELF_BLOCK = new ShelfBlock(FabricBlockSettings.create().nonOpaque());
     public static final BlockItem SHELF_BLOCKITEM = new BlockItem(SHELF_BLOCK, new FabricItemSettings());
 
-    public static final Block END_RELAY = new EndRelayBlock(FabricBlockSettings.create().requiresTool().strength(3.5f));
+    public static final Block END_RELAY = new EndRelayBlock(FabricBlockSettings.create().requiresTool().strength(2f));
     public static final BlockItem END_RELAY_BLOCKITEM = new EndRelayBlockItem(END_RELAY, new FabricItemSettings());
 
     public static final EntityType<BridgeBallEntity> BRIDGE_BALL_ENTITY_TYPE = Registry.register(

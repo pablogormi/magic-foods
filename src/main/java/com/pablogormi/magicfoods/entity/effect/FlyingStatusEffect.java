@@ -21,14 +21,4 @@ public class FlyingStatusEffect extends StatusEffect {
         }
         super.onApplied(entity, amplifier);
     }
-
-    @Override
-    public void applyUpdateEffect(LivingEntity entity, int amplifier) { //TODO: no funciona
-        if(amplifier == 0 && entity instanceof PlayerEntity pe) {
-            pe.getAbilities().allowFlying = false;
-            pe.getAbilities().flying = false;
-            pe.sendAbilitiesUpdate();
-        }
-        super.applyUpdateEffect(entity, amplifier);
-    }
 }
