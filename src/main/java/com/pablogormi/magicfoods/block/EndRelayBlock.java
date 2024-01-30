@@ -84,6 +84,7 @@ public class EndRelayBlock extends BlockWithEntity {
                     }
                 }
             } else if (state.get(CHARGES) > 0 && world.getBlockEntity(pos) instanceof EndRelayBlockEntity be) {
+                //player.sendMessage(Text.literal("Interacted with block!"), false);
                 BlockPos p1 = be.getSavedPos();
                 world.setBlockState(pos, state.with(CHARGES, state.get(CHARGES) - 1)); //Update charges
                 if (p1 != null) {
@@ -98,7 +99,7 @@ public class EndRelayBlock extends BlockWithEntity {
                 ((ServerPlayerEntity) player).sendMessage(Text.translatable("text."+MagicFoods.NAMESPACE + ".teleport.not_possible"), true);
             }
         }
-        return super.onUse(state, world, pos, player, hand, hit);
+        return ActionResult.SUCCESS;
     }
 
     public boolean canCharge(BlockState state) {
