@@ -6,5 +6,6 @@
   "block.magicfoods.end_relay" : "End Relay",
   "item.magicfoods.end_relay" : "End Relay",
   "effect.magicfoods.flying" : "Flying",
-  "magicfoods.gui.item_group": "Magic Foods"
+  "magicfoods.gui.item_group": "Magic Foods",
+  "text.magicfoods.teleport.not_possible" : "No charges left!"
 }

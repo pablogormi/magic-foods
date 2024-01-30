@@ -2,6 +2,7 @@ package com.pablogormi.magicfoods.block;
 
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.MapCodec;
+import com.pablogormi.magicfoods.MagicFoods;
 import com.pablogormi.magicfoods.block.entity.EndRelayBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -10,23 +11,21 @@ import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.render.DimensionEffects;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.CompassItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
@@ -34,7 +33,6 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.event.listener.GameEventListener;
 import org.jetbrains.annotations.Nullable;
@@ -77,18 +75,28 @@ public class EndRelayBlock extends BlockWithEntity {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (hand == Hand.MAIN_HAND && player.getStackInHand(hand).isOf(Items.END_CRYSTAL)) {
-            if (canCharge(state))
-                charge(player, world, pos, state);
-            if (!player.getAbilities().creativeMode) {
-                player.getStackInHand(hand).decrement(1);
+        if (!world.isClient) {
+            if (hand == Hand.MAIN_HAND && player.getStackInHand(hand).isOf(Items.END_CRYSTAL)) { //charging behaviour
+                if (canCharge(state)) {
+                    charge(player, world, pos, state);
+                    if (!player.getAbilities().creativeMode) {
+                        player.getStackInHand(hand).decrement(1);
+                    }
+                }
+            } else if (state.get(CHARGES) > 0 && world.getBlockEntity(pos) instanceof EndRelayBlockEntity be) {
+                BlockPos p1 = be.getSavedPos();
+                world.setBlockState(pos, state.with(CHARGES, state.get(CHARGES) - 1)); //Update charges
+                if (p1 != null) {
+                    world.playSound(null, p1.getX() + 0.5, p1.getY() + 1, p1.getZ() + 0.5, SoundEvents.ENTITY_PLAYER_TELEPORT, SoundCategory.PLAYERS, 1.0f, 1.0f);
+                    if (player.hasVehicle())
+                        ((ServerPlayerEntity) player).requestTeleportAndDismount(p1.getX() + 0.5, p1.getY() + 1, p1.getZ() + 0.5);
+                    else
+                        ((ServerPlayerEntity) player).requestTeleport(p1.getX() + 0.5, p1.getY() + 1, p1.getZ() + 0.5);
+                    player.onLanding();
+                }
+            } else {
+                ((ServerPlayerEntity) player).sendMessage(Text.translatable("text."+MagicFoods.NAMESPACE + ".teleport.not_possible"), true);
             }
-        }
-        else if (state.get(CHARGES) > 0 && world.getBlockEntity(pos) instanceof EndRelayBlockEntity be) {
-            BlockPos p1 = be.getSavedPos();
-            world.setBlockState(pos, state.with(CHARGES, state.get(CHARGES) - 1)); //Update charges
-            if (p1 != null && !world.isClient())
-            player.requestTeleport(p1.getX()+0.5, p1.getY()+1, p1.getZ()+0.5);
         }
         return super.onUse(state, world, pos, player, hand, hit);
     }
@@ -97,7 +105,7 @@ public class EndRelayBlock extends BlockWithEntity {
         return state.get(CHARGES) <= 0;
     }
     public static void charge(@Nullable Entity charger, World world, BlockPos pos, BlockState state) {
-        BlockState blockState = (BlockState)state.with(CHARGES, state.get(CHARGES) + 1);
+        BlockState blockState = (BlockState)state.with(CHARGES, state.get(CHARGES) + 4); // One End Crystal charges the block completely.
         world.setBlockState(pos, blockState, Block.NOTIFY_ALL);
         world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Emitter.of(charger, blockState));
         world.playSound(null, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1.0f, 1.0f);
@@ -105,8 +113,6 @@ public class EndRelayBlock extends BlockWithEntity {
 
 
     private void dropCompass(World world, BlockPos pos, EndRelayBlockEntity be) {
-        //CompassItem item = (CompassItem) Items.COMPASS;
-        //TODO: Añadir nbt data y comprobar si lo de abajo funciona
         ItemStack stack = new ItemStack(Items.COMPASS, 1);
         if (!world.isClient()) {
             NbtCompound compassNbt = new NbtCompound();
@@ -122,8 +128,6 @@ public class EndRelayBlock extends BlockWithEntity {
             list.add(stack);
             LOGGER.info("Spawning compass");
             ItemScatterer.spawn(world, pos, list);
-            //ServerWorld server = (ServerWorld) world;
-            //server.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack));
         }
 
     }
